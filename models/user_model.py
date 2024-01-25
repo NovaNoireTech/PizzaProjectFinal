@@ -8,8 +8,8 @@ from models import pizzamodel
 from schemas import PizzaSchema, UserSchema
 
 followers = db.Table ('followers', 
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('follower_id', db.Integer, db.ForeignKey('users.id'))
-    db.Column('follower_id', db.Integer, db.ForeignKey('users.id')))
 )
 
 class UserModel(db.Model):
@@ -22,9 +22,9 @@ class UserModel(db.Model):
     password_hash = db.Column(db.String(30), nullable = False)
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
-    followed = db.relationship ('UserModel', 
-                               secondary = 'followers'
-                               primaryjoin = followers.c.follower_id == id
+    followed = db.relationship( 'UserModel', 
+                               secondary = 'followers',
+                               primaryjoin = followers.c.follower_id == id,
                                secondaryjoin = followers.c.followed_id, 
                                backref = db.backref('followers', lazy = 'dynamic')
                                )
